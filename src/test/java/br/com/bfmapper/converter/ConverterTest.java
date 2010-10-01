@@ -6,6 +6,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
 import br.com.bfmapper.Mapping;
@@ -15,6 +16,8 @@ import br.com.bfmapper.model.Carro;
 import br.com.bfmapper.model.CarroCanonico;
 import br.com.bfmapper.model.Endereco;
 import br.com.bfmapper.model.EnderecoCanonico;
+import br.com.bfmapper.model.Livro;
+import br.com.bfmapper.model.LivroCanonico;
 import br.com.bfmapper.model.ObjectCanonicModel;
 import br.com.bfmapper.model.ObjectCanonicRecursiveModel1;
 import br.com.bfmapper.model.ObjectCanonicRecursiveModel2;
@@ -24,6 +27,8 @@ import br.com.bfmapper.model.Pessoa;
 import br.com.bfmapper.model.PessoaCanonico;
 import br.com.bfmapper.model.Pneu;
 import br.com.bfmapper.model.PneuCanonico;
+import br.com.bfmapper.model.Produto;
+import br.com.bfmapper.model.ProdutoCanonico;
 import br.com.bfmapper.model.TipoAluno;
 
 public class ConverterTest extends BaseTest {
@@ -176,9 +181,9 @@ public class ConverterTest extends BaseTest {
 	    
 	    Carro carro = new Mapping().apply(carroOrigem).to(Carro.class);
 	    
-	    Assert.assertNotNull("o pneu não pode ser null", carro.getPneu());
+	    Assert.assertNotNull("O pneu não pode ser null", carro.getPneu());
 	    Assert.assertFalse("Os carros não deveriam ter a mesma referencia", carro == carroOrigem);
-	    Assert.assertFalse("Os pneus Não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
+	    Assert.assertFalse("Os pneus não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
 	}
 	
 	@Test
@@ -190,12 +195,36 @@ public class ConverterTest extends BaseTest {
         carroOrigem.setDonos(Arrays.asList(dono1, dono2));
         Carro carro = new Mapping().apply(carroOrigem).to(Carro.class);
         
-        Assert.assertNotNull("o pneu não pode ser null", carro.getPneu());
+        Assert.assertNotNull("O pneu não pode ser null", carro.getPneu());
         Assert.assertFalse("Os carros não deveriam ter a mesma referencia", carro == carroOrigem);
-        Assert.assertFalse("Os pneus Não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
+        Assert.assertFalse("Os pneus não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
         Assert.assertFalse("As listas de donos não deveriam ter a mesma referencia", carro.getDonos() == carroOrigem.getDonos());
         Assert.assertFalse("O dono1 não deveriam ter a mesma referencia", carro.getDonos().get(0) == carroOrigem.getDonos().get(0));
         Assert.assertFalse("O dono2 não deveriam ter a mesma referencia", carro.getDonos().get(1) == carroOrigem.getDonos().get(1));
-        
 	}
+	
+	@Test
+	public void testConverterWithTransformerDefault() {
+		Livro livro = new Livro("O último olimpiano", "Intrinseca", "Rick Riordan");
+
+		LivroCanonico livroCanonico = new Mapping().apply(livro).to(LivroCanonico.class);
+		
+		Assert.assertNotNull("O livro não pode ser null", livroCanonico);
+		Assert.assertTrue("Transformer default não foi aplicado na propriedade nome", StringUtils.equals("O ÚLTIMO OLIMPIANO", livroCanonico.getNome()));
+		Assert.assertTrue("Transformer default não foi aplicado na propriedade editora", StringUtils.equals("INTRINSECA", livroCanonico.getEditora()));
+		Assert.assertTrue("Transformer default não foi aplicado na propriedade autor", StringUtils.equals("RICK RIORDAN", livroCanonico.getAutor()));
+	}
+
+	@Test
+	public void testConverterWithTransformerDefaultAndPrecedence() {
+		Produto produto = new Produto("WII", 1.99f, "nintendo");
+
+		ProdutoCanonico produtoCanonico = new Mapping().apply(produto).to(ProdutoCanonico.class);
+		
+		Assert.assertNotNull("O produto não pode ser null", produto);
+		Assert.assertTrue("Transformer declarado não foi aplicado na propriedade nome - falha de precedência", StringUtils.equals("wii", produtoCanonico.getMarca()));
+		Assert.assertTrue("Transformer default não foi aplicado na propriedade fabricante", StringUtils.equals("NINTENDO", produtoCanonico.getFabricante()));
+		Assert.assertNotNull("Propriedade preço não pode ser null", produtoCanonico.getPreco());
+	}
+	
 }

@@ -9,12 +9,11 @@ public class AppliedObject {
 	private String attribute;
 	
 	public AppliedObject(Object sourceObject) {
-		appliedType = AppliedType.APPLY;
+		this.appliedType = AppliedType.APPLY;
 		this.sourceObject = sourceObject;
 	}
 	
-	public AppliedObject(AppliedType appliedType, Object sourceObject,
-			String attribute) {
+	public AppliedObject(AppliedType appliedType, Object sourceObject, String attribute) {
 		this.appliedType = appliedType;
 		this.sourceObject = sourceObject;
 		this.attribute = attribute;
@@ -36,12 +35,9 @@ public class AppliedObject {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((appliedType == null) ? 0 : appliedType.hashCode());
-		result = prime * result
-				+ ((attribute == null) ? 0 : attribute.hashCode());
-		result = prime * result
-				+ ((sourceObject == null) ? 0 : sourceObject.hashCode());
+		result = prime * result + ((appliedType == null) ? 0 : appliedType.hashCode());
+		result = prime * result + ((attribute == null) ? 0 : attribute.hashCode());
+		result = prime * result + ((sourceObject == null) ? 0 : sourceObject.hashCode());
 		return result;
 	}
 
@@ -71,7 +67,5 @@ public class AppliedObject {
 			return false;
 		return true;
 	}
-	
-	
 	
 }

@@ -1,9 +1,14 @@
 package br.com.bfmapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import br.com.bfmapper.transformer.Transformer;
+import br.com.bfmapper.util.Acceptable;
+import br.com.bfmapper.util.CollectionUtils;
 import br.com.bfmapper.util.ReflectionUtils;
 
 public class Converter {
@@ -16,27 +21,52 @@ public class Converter {
 	
 	private Class<?> targetClass;
 	
-	public Converter(Class<?> sourceClass, Class<?> targetClass) {
+	private Set<DefaultTransformer> defaultPropertiesTransformers;
+	
+	public Converter(Class<?> sourceClass, Class<?> targetClass, DefaultTransformer ... defaultPropertiesTransformers) {
 		this.sourceClass = sourceClass;
 		this.targetClass = targetClass;
+		this.defaultPropertiesTransformers = new HashSet<DefaultTransformer>();
+		
+		if (defaultPropertiesTransformers != null) {
+			this.defaultPropertiesTransformers.addAll(Arrays.asList(defaultPropertiesTransformers));
+		}
 	}
 	
 	public Converter add(String sourceProperty, String targetProperty) {
 		PropertyMapping propertyMapping = new PropertyMapping(sourceProperty, targetProperty);
+		
+		Class<?> sourcePropertyClass = ReflectionUtils.invokeRecursiveType(this.sourceClass, sourceProperty);
+		Class<?> targetPropertyClass = ReflectionUtils.invokeRecursiveType(this.targetClass, targetProperty);
+		
+		propertyMapping.setTransformer(this.getDefaultPropertyTransformer(sourcePropertyClass, targetPropertyClass));
+		
 		this.currentProperty = propertyMapping;
-		properties.add(propertyMapping);
+		this.properties.add(propertyMapping);
+		
 		return this;
+	}
+	
+	public Class<?> getSourceClass() {
+		return this.sourceClass;
+	}
+
+	public Class<?> getTargetClass() {
+		return this.targetClass;
+	}
+
+	public List<Property> getProperties() {
+		return this.properties;
 	}
 	
 	public void addDefault(Class<?> clazz, String property, Object defaultValue) {
 		PropertyDefault propertyDefault = new PropertyDefault(clazz, property, defaultValue);
 		this.currentProperty = propertyDefault;
-		properties.add(propertyDefault);
+		this.properties.add(propertyDefault);
 	}
 	
-
 	public void with(Transformer transformer){
-		if (currentProperty instanceof PropertyMapping) {
+		if (this.currentProperty instanceof PropertyMapping) {
 			((PropertyMapping) this.currentProperty).setTransformer(transformer);
 		} else {
 			throw new IllegalArgumentException("It couldn't use with for default values");
@@ -44,23 +74,27 @@ public class Converter {
 	}
 	
 	public void withShallowCopy() {
-        if (currentProperty instanceof PropertyMapping) {
+        if (this.currentProperty instanceof PropertyMapping) {
             ((PropertyMapping) this.currentProperty).setShallowCopy(true);
         } else {
             throw new IllegalArgumentException("It couldn't use withShallowCopy for default values");
         }
 	}
-	
-	public Class<?> getSourceClass() {
-		return sourceClass;
-	}
 
-	public Class<?> getTargetClass() {
-		return targetClass;
-	}
-
-	public List<Property> getProperties() {
-		return properties;
+	public Transformer getDefaultPropertyTransformer(final Class<?> propertySourceClass, final Class<?> propertyTargetClass) {
+		Transformer transformer = null;
+		DefaultTransformer baseTransformer = CollectionUtils.unique(this.defaultPropertiesTransformers, new Acceptable<DefaultTransformer>() {
+			@Override
+			public boolean accept(DefaultTransformer value) {
+				return value.getSourcePropertyClass().equals(propertySourceClass) && value.getTargetPropertyClass().equals(propertyTargetClass);
+			}
+		});
+		
+		if (baseTransformer != null) {
+			transformer = baseTransformer.getTransformer();
+		}
+		
+		return transformer;
 	}
 	
 	public boolean containsProperty(Class<?> sourceClass, String propertyName) {
@@ -74,11 +108,13 @@ public class Converter {
 		}
 		return contains;
 	}
-	
+
 	public interface Property {
+		
 		Object getSourceValue(Object source);
 		
 		String getTargetProperty(Class<?> source);
+		
 	}
 	
 	public class PropertyDefault implements Property {
@@ -89,17 +125,15 @@ public class Converter {
 		
 		private Object defaultValue;
 
-		public PropertyDefault(Class<?> targetDefaultClass, String property,
-				Object defaultValue) {
+		public PropertyDefault(Class<?> targetDefaultClass, String property, Object defaultValue) {
 			this.targetDefaultClass = targetDefaultClass;
 			this.property = property;
 			this.defaultValue = defaultValue;
 		}
 
-
 		@Override
 		public Object getSourceValue(Object source) {
-			return defaultValue;
+			return this.defaultValue;
 		}
 		
 		public Class<?> getTargetClass() {
@@ -108,8 +142,7 @@ public class Converter {
 		
 		public String getTargetProperty(Class<?> source) {
 			String targetProperty = null;
-			
-			if (!source.equals(targetDefaultClass)) {
+			if (!source.equals(this.targetDefaultClass)) {
 				targetProperty = this.property;
 			}
 			return targetProperty;
@@ -132,7 +165,7 @@ public class Converter {
 		}
 		
 		public String getSourceProperty(Class<?> source) {
-			String property;
+			String property = null;
 			if (source.equals(Converter.this.sourceClass)) {
 				property = this.sourceProperty;
 			} else {
@@ -142,7 +175,7 @@ public class Converter {
 		}
 
 		public String getTargetProperty(Class<?> source) {
-			String property;
+			String property = null;
 			if (source.equals(Converter.this.sourceClass)) {
 				property = this.targetProperty;
 			} else {
@@ -160,7 +193,7 @@ public class Converter {
 		}
 
 		public boolean isShallowCopy() {
-            return shallowCopy;
+            return this.shallowCopy;
         }
 
         public void setShallowCopy(boolean shallowCopy) {

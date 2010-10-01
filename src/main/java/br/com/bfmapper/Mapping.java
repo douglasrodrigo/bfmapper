@@ -252,8 +252,14 @@ public class Mapping implements Serializable {
 				Class<?> targetPropertyClass = targetPropertyDescriptor.getPropertyType();
 				value = sourcePropertyDescriptor.getReadMethod().invoke(source);
 
-				if (!this.isSimpleType(sourcePropertyClass, targetPropertyClass)) {
-					value = this.resolveValue(source, target, targetPropertyName, targetPropertyName, value, null); 
+				Transformer transformer = null;
+				
+				if (converter != null) { 
+					transformer = converter.getDefaultPropertyTransformer(sourcePropertyClass, targetPropertyClass);
+				}	
+				
+				if (!this.isSimpleType(sourcePropertyClass, targetPropertyClass) || transformer != null) {
+					value = this.resolveValue(source, target, targetPropertyName, targetPropertyName, value, transformer); 
 				}
 
 				/* the value of the targetProperty won't be replaced by the value of the sourceProperty in case it's null */
