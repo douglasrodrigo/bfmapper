@@ -5,7 +5,7 @@ usage:
 
 writing bean mapper rules
 
-public class AlunoMappingRules implements RulesMapper {
+public class StudentMappingRules implements RulesMapper {
 
 	@Override
 	public void loadRules() {
