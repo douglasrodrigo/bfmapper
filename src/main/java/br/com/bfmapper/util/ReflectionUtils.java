@@ -180,16 +180,20 @@ public class ReflectionUtils {
     }
     
     public static Class<?> invokeRecursiveType(Object bean, String attribute) {
-        Class<?> targetBeanClass = getTargetClass(bean.getClass());
+    	return invokeRecursiveType(getTargetClass(bean.getClass()), attribute);
+    }
+
+    public static Class<?> invokeRecursiveType(Class<?> clazz, String attribute) {
         for (String propertyItem : attribute.split("\\.")) {
             try {
-                targetBeanClass = BeanUtils.getPropertyDescriptor(targetBeanClass, propertyItem).getPropertyType();
+            	clazz = BeanUtils.getPropertyDescriptor(clazz, propertyItem).getPropertyType();
             } catch (Exception e) {
                 throw new IllegalArgumentException("Field " + propertyItem + " doesn't exists");
             }
         }
-        return targetBeanClass;
+        return clazz;
     }
+
     
     public static Field invokeRecursiveField(Object bean, String attribute) {
         Field field = null;

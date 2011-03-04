@@ -36,6 +36,7 @@ public class Converter {
 		properties.add(propertyDefault);
 	}
 	
+
 	public void with(Transformer transformer){
 		if (currentProperty instanceof PropertyMapping) {
 			((PropertyMapping) this.currentProperty).setTransformer(transformer);

@@ -257,7 +257,7 @@ public class Mapping implements Serializable {
 				Class<?> targetPropertyClass = targetPropertyDescriptor.getPropertyType();
 				value = sourcePropertyDescriptor.getReadMethod().invoke(source);
 
-				if (!this.isSimpleType(sourcePropertyClass, targetPropertyClass)) {
+                if (!this.isSimpleType(sourcePropertyClass, targetPropertyClass)) {
 					value = this.resolveValue(source, target, targetPropertyName, targetPropertyName, value, null); 
 				}
 

@@ -176,9 +176,9 @@ public class ConverterTest extends BaseTest {
 	    
 	    Carro carro = new Mapping().apply(carroOrigem).to(Carro.class);
 	    
-	    Assert.assertNotNull("o pneu não pode ser null", carro.getPneu());
+	    Assert.assertNotNull("O pneu não pode ser null", carro.getPneu());
 	    Assert.assertFalse("Os carros não deveriam ter a mesma referencia", carro == carroOrigem);
-	    Assert.assertFalse("Os pneus Não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
+	    Assert.assertFalse("Os pneus não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
 	}
 	
 	@Test
@@ -190,12 +190,12 @@ public class ConverterTest extends BaseTest {
         carroOrigem.setDonos(Arrays.asList(dono1, dono2));
         Carro carro = new Mapping().apply(carroOrigem).to(Carro.class);
         
-        Assert.assertNotNull("o pneu não pode ser null", carro.getPneu());
+        Assert.assertNotNull("O pneu não pode ser null", carro.getPneu());
         Assert.assertFalse("Os carros não deveriam ter a mesma referencia", carro == carroOrigem);
-        Assert.assertFalse("Os pneus Não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
+        Assert.assertFalse("Os pneus não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
         Assert.assertFalse("As listas de donos não deveriam ter a mesma referencia", carro.getDonos() == carroOrigem.getDonos());
         Assert.assertFalse("O dono1 não deveriam ter a mesma referencia", carro.getDonos().get(0) == carroOrigem.getDonos().get(0));
         Assert.assertFalse("O dono2 não deveriam ter a mesma referencia", carro.getDonos().get(1) == carroOrigem.getDonos().get(1));
-        
 	}
+	
 }
