@@ -16,6 +16,8 @@ public class Converter {
 	
 	private Class<?> targetClass;
 	
+	private List<CustomTransformer> customTransformers = new ArrayList<CustomTransformer>();
+	
 	public Converter(Class<?> sourceClass, Class<?> targetClass) {
 		this.sourceClass = sourceClass;
 		this.targetClass = targetClass;
@@ -34,7 +36,6 @@ public class Converter {
 		properties.add(propertyDefault);
 	}
 	
-
 	public void with(Transformer transformer){
 		if (currentProperty instanceof PropertyMapping) {
 			((PropertyMapping) this.currentProperty).setTransformer(transformer);
@@ -50,7 +51,15 @@ public class Converter {
             throw new IllegalArgumentException("It couldn't use withShallowCopy for default values");
         }
 	}
-	
+
+    public void addCustomTransformer(CustomTransformer customTransformer) {
+        this.customTransformers.add(customTransformer);
+    }
+    
+    public List<CustomTransformer> getCustomTransfomers() {
+        return customTransformers;
+    }
+    
 	public Class<?> getSourceClass() {
 		return sourceClass;
 	}

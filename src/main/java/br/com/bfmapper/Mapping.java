@@ -113,6 +113,11 @@ public class Mapping implements Serializable {
 		}
 
 		this.evalEqualsProperties(source, target, converter);
+		
+		for (CustomTransformer customTransformer: converter.getCustomTransfomers()) {
+		    customTransformer.apply(source, target);
+		}
+		
 		return target;
 	}
 	
