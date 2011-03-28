@@ -1,6 +1,19 @@
 java bean converter
 =========================================
 
+installing:
+
+ mvn clean install
+
+
+ use like a maven dependency on your project
+
+<dependency>
+  <groupId>br.com.bfmapper</groupId>
+  <artifactId>bfmapper</artifactId>
+  <version>1.0-SNAPSHOT</version>
+</dependency>
+
 usage:
 
 writing bean mapper rules
@@ -31,3 +44,5 @@ multiple applies
 
     Student student = new Mapping().apply(studentA).apply(carMappedPrevioslyToStudent).to(Student.class);
 
+
+you can see more utilization on tests
