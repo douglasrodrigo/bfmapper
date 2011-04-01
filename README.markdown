@@ -8,11 +8,11 @@ installing:
 
  use like a maven dependency on your project
 
-<dependency>
+`<dependency>
   <groupId>br.com.bfmapper</groupId>
   <artifactId>bfmapper</artifactId>
   <version>1.0-SNAPSHOT</version>
-</dependency>
+</dependency>`
 
 usage:
 
