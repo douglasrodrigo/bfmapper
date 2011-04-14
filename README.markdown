@@ -1,20 +1,21 @@
-java bean converter
+bfmapper: Java Bean Converter
 =========================================
 
-installing:
+Installing:
+=========================================
 
- mvn clean install
+mvn clean install
 
+Use it like a maven dependency on your project
 
- use like a maven dependency on your project
+ 	  <dependency>
+	     <groupId>br.com.bfmapper</groupId>
+		 <artifactId>bfmapper</artifactId>
+		 <version>1.0-SNAPSHOT</version>
+	   </dependency>
 
-`<dependency>
-  <groupId>br.com.bfmapper</groupId>
-  <artifactId>bfmapper</artifactId>
-  <version>1.0-SNAPSHOT</version>
-</dependency>`
-
-usage:
+Usage:
+=========================================
 
 writing bean mapper rules
 
@@ -45,4 +46,4 @@ multiple applies
     Student student = new Mapping().apply(studentA).apply(carMappedPrevioslyToStudent).to(Student.class);
 
 
-you can see more utilization on tests
+You can see more utilization on tests!
