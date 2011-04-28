@@ -97,6 +97,15 @@ public class Mapping implements Serializable {
 		return returnValue;
 	}
 	
+	public <T> T toCollection(Class<?> target, Class<? extends Collection<?>> collectionClass) {
+	    return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+    public <T> T toCollection(Class<?> target) {
+	    return toCollection(target, (Class<? extends Collection<?>>) ArrayList.class);
+	}
+	
 	private Object instanceFactory(Class<?> target) {
 		Object object = null;
 		try {
