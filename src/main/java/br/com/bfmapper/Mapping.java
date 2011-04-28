@@ -160,9 +160,8 @@ public class Mapping implements Serializable {
                             }
                         }
 					} else if (ClassUtils.isAssignable(value.getClass(), Collection.class)) {
-						((Collection<?>)targetPropertyDescriptor.getReadMethod().invoke(target)).addAll((Collection)value);
-	                      setCollectionValueFromReadMethod(targetPropertyDescriptor, target, value);
-
+						setCollectionValueFromReadMethod(targetPropertyDescriptor, target, value);
+						
 					}
 				}
 			} catch (Exception e) {
