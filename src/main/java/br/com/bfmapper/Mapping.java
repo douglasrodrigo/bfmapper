@@ -97,13 +97,17 @@ public class Mapping implements Serializable {
 		return returnValue;
 	}
 	
+	@SuppressWarnings("unchecked")
+    public <T> T deepClone(T value) {
+	    return (T) this.apply(value).to(value.getClass());
+	}
+	
 	public <T> T toCollection(Class<?> target, Class<? extends Collection<?>> collectionClass) {
 	    return null;
 	}
 	
-	@SuppressWarnings("unchecked")
     public <T> T toCollection(Class<?> target) {
-	    return toCollection(target, (Class<? extends Collection<?>>) ArrayList.class);
+	    return null;
 	}
 	
 	private Object instanceFactory(Class<?> target) {
@@ -130,7 +134,6 @@ public class Mapping implements Serializable {
 		return target;
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void resolveProperty(Converter converter, Object source, Object target, Converter.Property property) {
 		String targetProperty = property.getTargetProperty(source.getClass());
 		
