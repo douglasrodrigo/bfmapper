@@ -302,12 +302,9 @@ public class Mapping implements Serializable {
 	}
 	
 	private Object resolveValue(Object source, Object target, String sourceProperty, String targetProperty, Object value, Transformer transformer) {
-		if (value == null) {
-			return null;
-		}
 		
 		Class<?> targetClassAttribute = ReflectionUtils.invokeRecursiveType(target, targetProperty);
-		Class<?> sourceClassAttribute = value.getClass();
+		Class<?> sourceClassAttribute = value != null ? value.getClass() : null;
 		
 		if (ClassUtils.isAssignable(targetClassAttribute, Collection.class) && value instanceof Collection<?>) {
 			value = this.resolveCollectionValue(source, target, sourceProperty, targetProperty, targetClassAttribute, value, transformer);
