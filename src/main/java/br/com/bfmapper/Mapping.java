@@ -312,7 +312,7 @@ public class Mapping implements Serializable {
 		} else if (transformer != null || ReflectionUtils.isSimpleType(sourceClassAttribute) || ReflectionUtils.isSimpleType(targetClassAttribute)) {
 			value = this.resolveSimpleValue(source, target, targetClassAttribute, value, transformer);
 			
-		} else {
+		} else if (value != null) {
 			Converter converter = this.getConverter(sourceClassAttribute, targetClassAttribute);
 		    if (converter != null) {
 		        try {
@@ -327,7 +327,7 @@ public class Mapping implements Serializable {
 		        } catch (Exception e) {
 		            throw new IllegalArgumentException(e);
 		        } 
-		    } else if (targetClassAttribute.equals(sourceClassAttribute) && value != null) {
+		    } else if (targetClassAttribute.equals(sourceClassAttribute)) {
 		        Object returnValue = instanceFactory(targetClassAttribute);
 		        evalEqualsProperties(value, returnValue, null);
 		        
