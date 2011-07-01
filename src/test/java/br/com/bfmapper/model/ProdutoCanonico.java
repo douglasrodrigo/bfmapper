@@ -1,5 +1,7 @@
 package br.com.bfmapper.model;
 
+import java.util.Date;
+
 public class ProdutoCanonico {
 
 	private String marca;
@@ -8,6 +10,8 @@ public class ProdutoCanonico {
 	
 	private String fabricante;
 
+	private Date dataValidade;
+	
 	public ProdutoCanonico() { }
 	
 	public ProdutoCanonico(String marca, Double preco, String fabricante) {
@@ -40,4 +44,11 @@ public class ProdutoCanonico {
 		this.fabricante = fabricante;
 	}
 
+    public Date getDataValidade() {
+        return dataValidade;
+    }
+
+    public void setDataValidade(Date dataValidade) {
+        this.dataValidade = dataValidade;
+    }
 }

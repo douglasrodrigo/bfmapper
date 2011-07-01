@@ -2,6 +2,7 @@ package br.com.bfmapper.converter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -15,6 +16,8 @@ import br.com.bfmapper.model.Carro;
 import br.com.bfmapper.model.CarroCanonico;
 import br.com.bfmapper.model.Endereco;
 import br.com.bfmapper.model.EnderecoCanonico;
+import br.com.bfmapper.model.Livro;
+import br.com.bfmapper.model.LivroCanonico;
 import br.com.bfmapper.model.ObjectCanonicModel;
 import br.com.bfmapper.model.ObjectCanonicRecursiveModel1;
 import br.com.bfmapper.model.ObjectCanonicRecursiveModel2;
@@ -24,6 +27,8 @@ import br.com.bfmapper.model.Pessoa;
 import br.com.bfmapper.model.PessoaCanonico;
 import br.com.bfmapper.model.Pneu;
 import br.com.bfmapper.model.PneuCanonico;
+import br.com.bfmapper.model.Produto;
+import br.com.bfmapper.model.ProdutoCanonico;
 import br.com.bfmapper.model.TipoAluno;
 
 public class ConverterTest extends BaseTest {
@@ -197,5 +202,29 @@ public class ConverterTest extends BaseTest {
         Assert.assertFalse("O dono1 não deveriam ter a mesma referencia", carro.getDonos().get(0) == carroOrigem.getDonos().get(0));
         Assert.assertFalse("O dono2 não deveriam ter a mesma referencia", carro.getDonos().get(1) == carroOrigem.getDonos().get(1));
 	}
+
+	@Test
+	public void testWithAutomaticEqualsProperties() {
+	    Date dataValidade = new Date();
+	    Produto produto = new Produto("marca A", new Float("3700.00"), "fabricante B");
+	    produto.setDataValidade(dataValidade);
+	    ProdutoCanonico produtoCanonico = new Mapping().apply(produto).to(ProdutoCanonico.class);
+	    Assert.assertNotNull("A marcao nao deveria ser null", produtoCanonico.getMarca());
+	    Assert.assertNotNull("O fabricante nao deveria ser null", produtoCanonico.getFabricante());
+	    Assert.assertNotNull("O preco nao deveria ser null", produtoCanonico.getPreco());
+	    Assert.assertEquals("A data de validade deveria igual", produtoCanonico.getDataValidade(), dataValidade);
+	}
 	
+    @Test
+    public void testWithExcludeEqualsProperties() {
+        Livro livro = new Livro("O programador pragmático", "BOOKMAN COMPANHIA ED", "Andrew Hunt");
+        livro.setAnoPublicacao(2011L);
+        
+        LivroCanonico livroCanonico = new Mapping().apply(livro).to(LivroCanonico.class);
+        Assert.assertNotNull("O autor do livro nao deveria ser null", livroCanonico.getAutor());
+        Assert.assertNotNull("A editora do livro nao deveria ser null", livroCanonico.getEditora());
+        Assert.assertNotNull("O nome do livro nao deveria ser null", livroCanonico.getNome());
+        Assert.assertNull("A data de publicacao deveria ser null", livroCanonico.getAnoPublicacao());
+        
+    }	
 }

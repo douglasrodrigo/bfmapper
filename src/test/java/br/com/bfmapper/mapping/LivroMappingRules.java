@@ -13,7 +13,10 @@ public class LivroMappingRules implements RulesMapper {
 
 	@Override
 	public void loadRules() {
-		MappingRules.addRule(new Converter(LivroCanonico.class, Livro.class));
+		MappingRules.addRule(new Converter(LivroCanonico.class, Livro.class) {{ 
+		    excludeEqualsProperties("anoPublicacao");
+		}});
+		
 	}
 
 	public class StringTransformer implements SimpleTransformer {

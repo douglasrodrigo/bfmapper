@@ -1,11 +1,13 @@
 package br.com.bfmapper.model;
 
+
 public class LivroCanonico {
 
 	private String nome;
 	private String editora;
 	private String autor;
-
+	private Long anoPublicacao;
+	
 	public String getNome() {
 		return nome;
 	}
@@ -24,5 +26,10 @@ public class LivroCanonico {
 	public void setAutor(String autor) {
 		this.autor = autor;
 	}
-	
+    public Long getAnoPublicacao() {
+        return anoPublicacao;
+    }
+    public void setAnoPublicacao(Long anoPublicacao) {
+        this.anoPublicacao = anoPublicacao;
+    }
 }

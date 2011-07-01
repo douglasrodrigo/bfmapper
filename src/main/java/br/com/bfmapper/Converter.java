@@ -1,6 +1,7 @@
 package br.com.bfmapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import br.com.bfmapper.transformer.Transformer;
@@ -9,6 +10,8 @@ import br.com.bfmapper.util.ReflectionUtils;
 public class Converter {
 	
 	private List<Property> properties = new ArrayList<Property>();
+	
+	private List<String> excludedProperties = new ArrayList<String>();
 	
 	private Property currentProperty;
 	
@@ -36,7 +39,10 @@ public class Converter {
 		properties.add(propertyDefault);
 	}
 	
-
+	public void excludeEqualsProperties(String... properties) {
+	    excludedProperties.addAll(Arrays.asList(properties));
+	}
+	
 	public void with(Transformer transformer){
 		if (currentProperty instanceof PropertyMapping) {
 			((PropertyMapping) this.currentProperty).setTransformer(transformer);
@@ -71,6 +77,10 @@ public class Converter {
 
 	public List<Property> getProperties() {
 		return properties;
+	}
+	
+	public List<String> getExcludedProperties() {
+	    return excludedProperties;
 	}
 	
 	public boolean containsProperty(Class<?> sourceClass, String propertyName) {

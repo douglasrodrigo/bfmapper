@@ -122,7 +122,7 @@ public class Mapping implements Serializable {
 
 	private Object applyConverter(Converter converter, Object source, Object target) {
 		for (Converter.Property property : converter.getProperties()) {
-			this.resolveProperty(converter, source, target, property);
+			this.resolveProperty(source, target, property);
 		}
 
 		this.evalEqualsProperties(source, target, converter);
@@ -134,7 +134,7 @@ public class Mapping implements Serializable {
 		return target;
 	}
 	
-	private void resolveProperty(Converter converter, Object source, Object target, Converter.Property property) {
+	private void resolveProperty(Object source, Object target, Converter.Property property) {
 		String targetProperty = property.getTargetProperty(source.getClass());
 		
 		if (targetProperty != null) {
@@ -254,7 +254,8 @@ public class Mapping implements Serializable {
 			for(PropertyDescriptor targetPropertyDescriptor : BeanUtils.getPropertyDescriptors(target.getClass())) {
 				targetPropertyName = targetPropertyDescriptor.getName();
 
-				if (targetPropertyName.equals("class") || (converter != null && converter.containsProperty(source.getClass(), targetPropertyName))) {
+				if (targetPropertyName.equals("class") || (converter != null && (converter.containsProperty(source.getClass(), targetPropertyName) || 
+				        converter.getExcludedProperties().contains(targetPropertyName)))) {
 					continue;
 				}
 

@@ -1,5 +1,7 @@
 package br.com.bfmapper.model;
 
+import java.util.Date;
+
 public class Produto {
 
 	private String marca;
@@ -8,6 +10,8 @@ public class Produto {
 	
 	private String fabricante;
 
+	private Date dataValidade;
+	
 	public Produto() { }
 	
 	public Produto(String marca, Float preco, String fabricante) {
@@ -40,4 +44,11 @@ public class Produto {
 		this.fabricante = fabricante;
 	}
 	
+    public Date getDataValidade() {
+        return dataValidade;
+    }
+
+    public void setDataValidade(Date dataValidade) {
+        this.dataValidade = dataValidade;
+    }	
 }
