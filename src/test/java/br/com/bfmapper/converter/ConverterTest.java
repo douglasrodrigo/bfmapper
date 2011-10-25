@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.NoOp;
 
 import org.junit.Test;
 
@@ -35,6 +37,7 @@ public class ConverterTest extends BaseTest {
     
 	@Test
 	public void testConverterSimple() {
+	    
 		Carro carro = new Carro(1L, "Uno", "EP", new Pneu(1L, "Pirelli"));
 		CarroCanonico carroCanonico = new Mapping().apply(carro).to(CarroCanonico.class);
 		
@@ -226,5 +229,21 @@ public class ConverterTest extends BaseTest {
         Assert.assertNotNull("O nome do livro nao deveria ser null", livroCanonico.getNome());
         Assert.assertNull("A data de publicacao deveria ser null", livroCanonico.getAnoPublicacao());
         
-    }	
+    }
+    
+    @Test
+    public void testWithProxiedClasses() {
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(Carro.class);
+        enhancer.setCallback(NoOp.INSTANCE);
+        Object proxiedCarroObject = enhancer.create();
+        
+        
+        ((Carro) proxiedCarroObject).setNome("Car one");
+        
+        CarroCanonico carroCanonico = new Mapping().apply(proxiedCarroObject).to(CarroCanonico.class);
+        
+        Assert.assertEquals("car and canonic car should have same name", ((Carro) proxiedCarroObject).getNome(), carroCanonico.getMarca());
+        
+    }
 }
