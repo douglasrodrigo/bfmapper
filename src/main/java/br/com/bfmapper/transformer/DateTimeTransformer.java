@@ -85,15 +85,23 @@ public class DateTimeTransformer implements SimpleTransformer {
 			} else {
 				returnValue = new Long(this.transformDateToString(this.transformCalendarToDate((Calendar) value)));
 			}
-		} else if (ClassUtils.isAssignable(type, XMLGregorianCalendar.class) && value instanceof java.util.Date) {
+		} else if (ClassUtils.isAssignable(type, XMLGregorianCalendar.class) && (value instanceof java.util.Date || value instanceof Calendar)) {
+		    Calendar calendar = value instanceof java.util.Date ? this.transformDateToCalendar((java.util.Date) value) :  (Calendar) value;
+		    
 			try {
-				returnValue = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar) this.transformDateToCalendar((java.util.Date) value));
+				returnValue = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar) calendar);
 			} catch (DatatypeConfigurationException e) {
 				throw new IllegalArgumentException("Error parser java.util.Date value to XMLGregorianCalendar");
 			}
 			
-		} else if (ClassUtils.isAssignable(type, java.util.Date.class) && value instanceof XMLGregorianCalendar) {
-			returnValue = this.transformCalendarToDate(((XMLGregorianCalendar) value).toGregorianCalendar());			
+		} else if ((ClassUtils.isAssignable(type, java.util.Date.class) || ClassUtils.isAssignable(type, Calendar.class)) && value instanceof XMLGregorianCalendar) {
+	        Calendar calendarResult = Calendar.getInstance();
+	        calendarResult.setTimeInMillis(((XMLGregorianCalendar) value).toGregorianCalendar().getTimeInMillis());
+	        returnValue = calendarResult;
+		    
+			if (ClassUtils.isAssignable(type, java.util.Date.class)) { 
+			    returnValue = this.transformCalendarToDate((Calendar) returnValue);
+			}
 			
 		} else {
 			throw new IllegalArgumentException("Incorrect type for transformer class");

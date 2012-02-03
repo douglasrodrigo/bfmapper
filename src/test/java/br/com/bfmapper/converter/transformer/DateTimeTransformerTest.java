@@ -30,7 +30,7 @@ public class DateTimeTransformerTest {
 		DateFormat format = new SimpleDateFormat(TEST_PATTERN_DATE_1);
 		Date transform = new DateTimeTransformer(TEST_PATTERN_DATE_1).transform(value, Date.class);
 
-		Assert.assertNotNull("Objeto java.util.Date não pode ser null", transform);
+		Assert.assertNotNull("Objeto java.util.Date nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto java.util.Date deve ser compativel com outro objeto java.util.Date de mesmo valor",
 				transform, format.parse(value));
 	}
@@ -41,7 +41,7 @@ public class DateTimeTransformerTest {
 		DateFormat format = new SimpleDateFormat(TEST_PATTERN_DATE_1);
 		String transform = new DateTimeTransformer(TEST_PATTERN_DATE_1).transform(value, String.class);
 
-		Assert.assertNotNull("Objeto String não pode ser null", transform);
+		Assert.assertNotNull("Objeto String nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto String deve ser compativel com outro objeto String de mesmo valor",
 				transform.toString(), format.format(value));
 	}
@@ -54,7 +54,7 @@ public class DateTimeTransformerTest {
 		
 		Calendar transform = new DateTimeTransformer().transform(value, Calendar.class);
 
-		Assert.assertNotNull("Objeto Calendar não pode ser null", transform);
+		Assert.assertNotNull("Objeto Calendar nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto Calendar deve ser compativel com outro objeto Calendar de mesmo valor", transform, calendar);
 	}
 
@@ -66,7 +66,7 @@ public class DateTimeTransformerTest {
 		
 		Date transform = new DateTimeTransformer().transform(value, java.util.Date.class);
 
-		Assert.assertNotNull("Objeto java.util.Date não pode ser null", transform);
+		Assert.assertNotNull("Objeto java.util.Date nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto java.util.Date deve ser compativel com outro objeto java.util.Date de mesmo valor", transform, date);
 	}
 
@@ -79,7 +79,7 @@ public class DateTimeTransformerTest {
 		
 		Calendar transform = new DateTimeTransformer(TEST_PATTERN_DATE_2).transform(value, Calendar.class);
 
-		Assert.assertNotNull("Objeto Calendar não pode ser null", transform);
+		Assert.assertNotNull("Objeto Calendar nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto Calendar deve ser compativel com outro objeto Calendar de mesmo valor", transform, calendar);
 	}
 	
@@ -93,7 +93,7 @@ public class DateTimeTransformerTest {
 		
 		String transform = new DateTimeTransformer(TEST_PATTERN_DATE_2).transform(value, String.class);
 
-		Assert.assertNotNull("Objeto String não pode ser null", transform);
+		Assert.assertNotNull("Objeto String nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto String deve ser compativel com outro objeto String de mesmo valor", transform.toString(), stringDate);
 	}
 	
@@ -104,7 +104,7 @@ public class DateTimeTransformerTest {
 		
 		Date transform = new DateTimeTransformer().transform(value, java.util.Date.class);
 
-		Assert.assertNotNull("Objeto java.util.Date não pode ser null", transform);
+		Assert.assertNotNull("Objeto java.util.Date nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto java.util.Date deve ser compativel com outro objeto java.util.Date de mesmo valor", transform, date);
 	}
 	
@@ -115,7 +115,7 @@ public class DateTimeTransformerTest {
 		
 		Long transform = new DateTimeTransformer().transform(value, Long.class);
 
-		Assert.assertNotNull("Objeto Long não pode ser null", transform);
+		Assert.assertNotNull("Objeto Long nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto Long deve ser compativel com outro objeto Long de mesmo valor", transform, timeMillis);
 	}
 
@@ -127,7 +127,7 @@ public class DateTimeTransformerTest {
 		
 		Date transform = new DateTimeTransformer(TEST_PATTERN_DATE_3, true).transform(value, java.util.Date.class);
 
-		Assert.assertNotNull("Objeto java.util.Date não pode ser null", transform);
+		Assert.assertNotNull("Objeto java.util.Date nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto java.util.Date deve ser compativel com outro objeto java.util.Date de mesmo valor", transform, date);
 	}
 	
@@ -139,7 +139,7 @@ public class DateTimeTransformerTest {
 		
 		Long transform = new DateTimeTransformer(TEST_PATTERN_DATE_3, true).transform(value, Long.class);
 
-		Assert.assertNotNull("Objeto Long não pode ser null", transform);
+		Assert.assertNotNull("Objeto Long nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto Long deve ser compativel com outro objeto Long de mesmo valor", transform, longDate);
 	}
 
@@ -153,7 +153,7 @@ public class DateTimeTransformerTest {
 		
 		Calendar transform = new DateTimeTransformer().transform(value, Calendar.class);
 
-		Assert.assertNotNull("Objeto Calendar não pode ser null", transform);
+		Assert.assertNotNull("Objeto Calendar nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto Calendar deve ser compativel com outro objeto Calendar de mesmo valor", transform, calendar);
 	}
 
@@ -167,7 +167,7 @@ public class DateTimeTransformerTest {
 		
 		Long transform = new DateTimeTransformer().transform(value, Long.class);
 
-		Assert.assertNotNull("Objeto Long não pode ser null", transform);
+		Assert.assertNotNull("Objeto Long nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto Long deve ser compativel com outro objeto Long de mesmo valor", transform, timeMillis);
 	}
 	
@@ -183,7 +183,7 @@ public class DateTimeTransformerTest {
 		
 		Calendar transform = new DateTimeTransformer(TEST_PATTERN_DATE_3, true).transform(value, Calendar.class);
 
-		Assert.assertNotNull("Objeto Calendar não pode ser null", transform);
+		Assert.assertNotNull("Objeto Calendar nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto Calendar deve ser compativel com outro objeto Calendar de mesmo valor", transform, calendar);
 	}
 
@@ -199,7 +199,7 @@ public class DateTimeTransformerTest {
 		
 		Long transform = new DateTimeTransformer(TEST_PATTERN_DATE_3, true).transform(value, Long.class);
 
-		Assert.assertNotNull("Objeto Long não pode ser null", transform);
+		Assert.assertNotNull("Objeto Long nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto Long deve ser compativel com outro objeto Long de mesmo valor", transform, longAsDate);
 	}
 
@@ -212,7 +212,7 @@ public class DateTimeTransformerTest {
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setTime(value);
 		
-		Assert.assertNotNull("Objeto XMLGregorianCalendar não pode ser null", transform);
+		Assert.assertNotNull("Objeto XMLGregorianCalendar nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto XMLGregorianCalendar deve ser compativel com outro objeto XMLGregorianCalendar de mesmo valor", transform, DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
 	}
 	
@@ -226,18 +226,43 @@ public class DateTimeTransformerTest {
 		
 		java.util.Date transform = new DateTimeTransformer().transform(value, java.util.Date.class);
 		
-		Assert.assertNotNull("Objeto java.util.Date não pode ser null", transform);
+		Assert.assertNotNull("Objeto java.util.Date nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto java.util.Date deve ser compativel com outro objeto java.util.Date de mesmo valor", transform, date);
 	}
 
-	@Test
+    @Test
+    public void transformerXMLGregorianCalendarToCalendar() throws ParseException, DatatypeConfigurationException {
+        Calendar calendar = Calendar.getInstance();
+        
+        XMLGregorianCalendar value = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar) calendar);
+        
+        Calendar transform = new DateTimeTransformer().transform(value, Calendar.class);
+        
+        Assert.assertNotNull("Objeto calendar pode ser null", transform);
+        Assert.assertEquals("Objeto calendar deve ser compativel com outro objeto calendar de mesmo valor", transform, calendar);
+    }
+	
+    @Test
+    public void transformerCalendarToXMLGregorianCalendar() throws ParseException, DatatypeConfigurationException {
+        Calendar calendar = Calendar.getInstance();
+        XMLGregorianCalendar transform = new DateTimeTransformer().transform(calendar, XMLGregorianCalendar.class);
+        
+        GregorianCalendar gregorianCalendar = new GregorianCalendar();
+        gregorianCalendar.setTime(calendar.getTime());
+        
+        Assert.assertNotNull("Objeto XMLGregorianCalendar nÃ£o pode ser null", transform);
+        Assert.assertEquals("Objeto XMLGregorianCalendar deve ser compativel com outro objeto XMLGregorianCalendar de mesmo valor", transform, DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar));
+    }
+
+    
+    @Test
 	public void transformerUtilDateToSqlDate() {
 		java.util.Date value = new java.util.Date();
 		java.sql.Date sqlDate = new java.sql.Date(value.getTime());
 
 		java.sql.Date transform = new DateTimeTransformer().transform(value, java.sql.Date.class);
 
-		Assert.assertNotNull("Objeto java.sql.Date não pode ser null", transform);
+		Assert.assertNotNull("Objeto java.sql.Date nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto java.sql.Date deve ser compativel com outro objeto java.sql.Date de mesmo valor", transform, sqlDate);
 	}
 
@@ -248,7 +273,7 @@ public class DateTimeTransformerTest {
 		java.sql.Date value = new java.sql.Date(utilDate.getTime());
 		java.util.Date transform = new DateTimeTransformer().transform(value, java.util.Date.class);
 
-		Assert.assertNotNull("Objeto java.util.Date não pode ser null", transform);
+		Assert.assertNotNull("Objeto java.util.Date nÃ£o pode ser null", transform);
 		Assert.assertEquals("Objeto java.util.Date deve ser compativel com outro objeto java.util.Date de mesmo valor", transform, utilDate);
 	}
 	
