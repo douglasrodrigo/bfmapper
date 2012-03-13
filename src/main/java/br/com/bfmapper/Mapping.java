@@ -113,7 +113,7 @@ public class Mapping implements Serializable {
 	private Object instanceFactory(Class<?> target) {
 		Object object = null;
 		try {
-			object = target.newInstance();
+			object = ReflectionUtils.newInstance(target);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		} 
@@ -200,7 +200,7 @@ public class Mapping implements Serializable {
 		
 		if (converter != null) {
 			try {
-				ReflectionUtils.invokeRecursiveSetter(target, targetProperty.getName(), this.applyConverter(converter, source, targetProperty.getPropertyType().newInstance()));
+				ReflectionUtils.invokeRecursiveSetter(target, targetProperty.getName(), this.applyConverter(converter, source, ReflectionUtils.newInstance(targetProperty.getPropertyType())));
 			} catch (Exception e) {
 				throw new IllegalArgumentException(e);
 			} 
@@ -215,7 +215,7 @@ public class Mapping implements Serializable {
 			if (converter != null) {
 			    Object fieldValue = ReflectionUtils.invokeRecursiveGetter(target, fieldName);
 			    if (fieldValue == null) {
-			        fieldValue = fieldType.newInstance();
+			        fieldValue = ReflectionUtils.newInstance(fieldType);
 			    }
 			    
 				ReflectionUtils.invokeRecursiveSetter(target, fieldName, this.applyConverter(converter, source, fieldValue));
@@ -319,7 +319,7 @@ public class Mapping implements Serializable {
 		        try {
 		            Object targetInstance = this.mappingContext.getCachedObjects().get(value);
 		            if (targetInstance == null) {
-		                targetInstance = targetClassAttribute.newInstance();
+		                targetInstance = ReflectionUtils.newInstance(targetClassAttribute);
 		                this.addToCache(value, targetInstance);
 		                value = this.applyConverter(converter, value, targetInstance);
 		            } else {
@@ -382,7 +382,7 @@ public class Mapping implements Serializable {
 				
 				if (converter != null) {
 					for (Object sourceItem : (Collection<Object>) sourceValue) {
-						targetCollection.add(this.applyConverter(converter, sourceItem, targetCollectionItemClass.newInstance()));
+						targetCollection.add(this.applyConverter(converter, sourceItem, ReflectionUtils.newInstance(targetCollectionItemClass)));
 					}
 					
 				} else if (ReflectionUtils.isSimpleType(targetCollectionItemClass)) {

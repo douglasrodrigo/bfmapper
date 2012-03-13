@@ -1,5 +1,6 @@
 package br.com.bfmapper.util;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -162,7 +163,7 @@ public class ReflectionUtils {
                 targetBean = ReflectionUtils.invokeGetter(targetBean, propertyItem);
                 if(targetBean == null) {
                     try {
-                        targetBean = BeanUtils.getPropertyDescriptor(lastBean.getClass(), propertyItem).getPropertyType().newInstance();
+                        targetBean = newInstance(BeanUtils.getPropertyDescriptor(lastBean.getClass(), propertyItem).getPropertyType());
                         ReflectionUtils.invokeSetter(lastBean, propertyItem, targetBean, true);                     
                     } catch (Exception e) {
                         throw new IllegalArgumentException("Method " + propertyItem + " doesn't exists");
@@ -241,13 +242,15 @@ public class ReflectionUtils {
 
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<?> clazz) {
-        T instance = null;
+        Object instance = null;
         try {
-            instance = (T) clazz.newInstance();
+            Constructor<?> constructor = clazz.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            instance = constructor.newInstance();
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
-        return instance;
+        return (T) instance;
     }
     
     public static Class<?> getGenericClass(Class<?> clazz, int argument) {

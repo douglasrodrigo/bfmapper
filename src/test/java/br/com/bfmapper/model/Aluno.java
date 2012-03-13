@@ -11,7 +11,7 @@ public class Aluno {
 	private String tipoAluno;
 	private List<String> notas; 
 	
-	public Aluno() { }
+	private Aluno() { }
 	
 	public Aluno(Long id, String nome, String idade) {
 		this.id = id;
