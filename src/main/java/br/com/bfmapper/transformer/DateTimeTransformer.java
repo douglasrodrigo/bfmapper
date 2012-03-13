@@ -102,7 +102,10 @@ public class DateTimeTransformer implements SimpleTransformer {
 			if (ClassUtils.isAssignable(type, java.util.Date.class)) { 
 			    returnValue = this.transformCalendarToDate((Calendar) returnValue);
 			}
-			
+		} else if (String.class.equals(type) && (value instanceof XMLGregorianCalendar)) {
+            XMLGregorianCalendar xmlCalendar = (XMLGregorianCalendar) value;
+            returnValue = this.transformDateToString(xmlCalendar.toGregorianCalendar().getTime());
+            
 		} else {
 			throw new IllegalArgumentException("Incorrect type for transformer class");
 		}
