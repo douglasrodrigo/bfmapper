@@ -85,7 +85,12 @@ public class DateTimeTransformer implements SimpleTransformer {
 			} else {
 				returnValue = new Long(this.transformDateToString(this.transformCalendarToDate((Calendar) value)));
 			}
-		} else if (ClassUtils.isAssignable(type, XMLGregorianCalendar.class) && (value instanceof java.util.Date || value instanceof Calendar)) {
+		} else if (ClassUtils.isAssignable(type, XMLGregorianCalendar.class) && (value instanceof java.util.Date || value instanceof Calendar || value instanceof String)) {
+		    
+		    if (value instanceof String) {
+		        value = this.transformStringToDate(value.toString());
+		    }
+		    
 		    Calendar calendar = value instanceof java.util.Date ? this.transformDateToCalendar((java.util.Date) value) :  (Calendar) value;
 		    
 			try {
