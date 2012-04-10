@@ -97,6 +97,18 @@ public class Converter {
 		return contains;
 	}
 	
+	public Converter extendsOf(String alias) {
+		Converter converter = MappingRules.getTemplate(alias);
+		if (converter == null) {
+			throw new IllegalArgumentException("Nothing template with name " + alias);
+		}
+
+		this.properties.addAll(converter.properties);
+		this.customTransformers.addAll(converter.customTransformers);
+		this.excludedProperties.addAll(converter.excludedProperties);
+		return this;
+	}
+	
 	public interface Property {
 		Object getSourceValue(Object source);
 		
