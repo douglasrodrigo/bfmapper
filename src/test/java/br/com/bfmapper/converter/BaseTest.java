@@ -6,9 +6,14 @@ import br.com.bfmapper.MappingRulesLoader;
 
 public abstract class BaseTest {
 
+    private static boolean mappingRulesLoaded = false;
+    
     @BeforeClass
     public static void loadMappings() {
-        MappingRulesLoader.loader("br.com.bfmapper.mapping");
+        if (!mappingRulesLoaded) {
+            MappingRulesLoader.loader("br.com.bfmapper.mapping");
+            mappingRulesLoaded = true;
+        }
     }
     
 }

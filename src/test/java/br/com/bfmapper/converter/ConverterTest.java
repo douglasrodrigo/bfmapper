@@ -11,7 +11,9 @@ import net.sf.cglib.proxy.NoOp;
 
 import org.junit.Test;
 
+import br.com.bfmapper.Converter;
 import br.com.bfmapper.Mapping;
+import br.com.bfmapper.MappingRules;
 import br.com.bfmapper.model.Aluno;
 import br.com.bfmapper.model.AlunoCanonico;
 import br.com.bfmapper.model.Carro;
@@ -245,5 +247,11 @@ public class ConverterTest extends BaseTest {
         
         Assert.assertEquals("car and canonic car should have same name", ((Carro) proxiedCarroObject).getNome(), carroCanonico.getMarca());
         
+    }
+    
+    @Test
+    public void testShouldNotAddMultipleConvertersForTheSamePairOfClasses() {
+        MappingRules.addRule(new Converter(ObjectCanonicModel.class, ObjectModel.class));
+        MappingRules.addRule(new Converter(ObjectCanonicModel.class, ObjectModel.class));
     }
 }
