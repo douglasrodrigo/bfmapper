@@ -200,7 +200,12 @@ public class Mapping implements Serializable {
 		
 		if (converter != null) {
 			try {
-				ReflectionUtils.invokeRecursiveSetter(target, targetProperty.getName(), this.applyConverter(converter, source, ReflectionUtils.newInstance(targetProperty.getPropertyType())));
+				Object instance = ReflectionUtils.invokeGetter(target, targetProperty.getName());
+				if (instance == null) {
+					instance = ReflectionUtils.newInstance(targetProperty.getPropertyType());	
+				}
+				
+				ReflectionUtils.invokeRecursiveSetter(target, targetProperty.getName(), this.applyConverter(converter, source, instance));
 			} catch (Exception e) {
 				throw new IllegalArgumentException(e);
 			} 
@@ -318,8 +323,14 @@ public class Mapping implements Serializable {
 		    if (converter != null) {
 		        try {
 		            Object targetInstance = this.mappingContext.getCachedObjects().get(value);
+
 		            if (targetInstance == null) {
-		                targetInstance = ReflectionUtils.newInstance(targetClassAttribute);
+		            	targetInstance = ReflectionUtils.invokeGetter(target, targetProperty);
+		            	
+		            	if (targetInstance == null) {
+		            		targetInstance = ReflectionUtils.newInstance(targetClassAttribute);		            		
+		            	}
+		            	
 		                this.addToCache(value, targetInstance);
 		                value = this.applyConverter(converter, value, targetInstance);
 		            } else {
