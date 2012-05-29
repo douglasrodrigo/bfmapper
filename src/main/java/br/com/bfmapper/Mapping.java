@@ -200,7 +200,7 @@ public class Mapping implements Serializable {
 		
 		if (converter != null) {
 			try {
-				Object instance = ReflectionUtils.invokeGetter(target, targetProperty.getName());
+				Object instance = ReflectionUtils.invokeRecursiveGetter(target, targetProperty.getName());
 				if (instance == null) {
 					instance = ReflectionUtils.newInstance(targetProperty.getPropertyType());	
 				}
@@ -325,7 +325,7 @@ public class Mapping implements Serializable {
 		            Object targetInstance = this.mappingContext.getCachedObjects().get(value);
 
 		            if (targetInstance == null) {
-		            	targetInstance = ReflectionUtils.invokeGetter(target, targetProperty);
+		            	targetInstance = ReflectionUtils.invokeRecursiveGetter(target, targetProperty);
 		            	
 		            	if (targetInstance == null) {
 		            		targetInstance = ReflectionUtils.newInstance(targetClassAttribute);		            		
