@@ -3,6 +3,7 @@ package br.com.bfmapper.util;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.util.Calendar;
@@ -253,6 +254,20 @@ public class ReflectionUtils {
         return (T) instance;
     }
     
+    @SuppressWarnings("unchecked")
+    public static <T> T newInnerClassInstance(Class<?> clazz, Object owner) {
+    	Object instance = null;
+    	try {
+    		Constructor<?> constructor = clazz.getDeclaredConstructor(owner.getClass());
+    		constructor.setAccessible(true);
+    		instance = constructor.newInstance(owner);
+    	} catch (Exception e) {
+    		throw new IllegalArgumentException(e);
+    	}
+
+    	return (T) instance;
+    }
+    
     public static Class<?> getGenericClass(Class<?> clazz, int argument) {
         return (Class<?>) ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[argument];
     }
@@ -288,6 +303,10 @@ public class ReflectionUtils {
             clazz = clazz.getSuperclass();
         }
         return clazz;
+    }
+    
+    public static boolean isInnerClass(Class<?> clazz) {
+    	return clazz.getEnclosingClass() != null && !Modifier.isStatic(clazz.getModifiers());
     }
 
 }

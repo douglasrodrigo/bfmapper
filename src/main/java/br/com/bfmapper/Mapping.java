@@ -328,7 +328,11 @@ public class Mapping implements Serializable {
 		            	targetInstance = ReflectionUtils.invokeRecursiveGetter(target, targetProperty);
 		            	
 		            	if (targetInstance == null) {
-		            		targetInstance = ReflectionUtils.newInstance(targetClassAttribute);		            		
+		            	    if (ReflectionUtils.isInnerClass(targetClassAttribute)) {
+		            	        targetInstance = ReflectionUtils.newInnerClassInstance(targetClassAttribute, target);
+		            	    } else {
+		            	        targetInstance = ReflectionUtils.newInstance(targetClassAttribute);
+		            	    }
 		            	}
 		            	
 		                this.addToCache(value, targetInstance);
@@ -352,7 +356,6 @@ public class Mapping implements Serializable {
 		return value;
 	}
 
-	@SuppressWarnings("unchecked")
 	private Object resolveSimpleValue(Object source, Object target, Class<?> targetClassAttribute, Object value, Transformer transformer) {
 
 		if (transformer != null) {

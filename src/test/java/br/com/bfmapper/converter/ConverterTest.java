@@ -27,6 +27,9 @@ import br.com.bfmapper.model.ObjectCanonicRecursiveModel1;
 import br.com.bfmapper.model.ObjectCanonicRecursiveModel2;
 import br.com.bfmapper.model.ObjectModel;
 import br.com.bfmapper.model.ObjectRecursiveModel1;
+import br.com.bfmapper.model.Outer;
+import br.com.bfmapper.model.Outer.Inner;
+import br.com.bfmapper.model.OuterCanonico;
 import br.com.bfmapper.model.Pessoa;
 import br.com.bfmapper.model.PessoaCanonico;
 import br.com.bfmapper.model.Pneu;
@@ -34,6 +37,9 @@ import br.com.bfmapper.model.PneuCanonico;
 import br.com.bfmapper.model.Produto;
 import br.com.bfmapper.model.ProdutoCanonico;
 import br.com.bfmapper.model.TipoAluno;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ConverterTest extends BaseTest {
     
@@ -253,5 +259,34 @@ public class ConverterTest extends BaseTest {
     public void testShouldNotAddMultipleConvertersForTheSamePairOfClasses() {
         MappingRules.addRule(new Converter(ObjectCanonicModel.class, ObjectModel.class));
         MappingRules.addRule(new Converter(ObjectCanonicModel.class, ObjectModel.class));
+    }
+    
+    @Test
+    public void testInnerClassMapping() {
+    	Outer outer = new Outer();
+    	outer.setName("outer name");
+    	Inner inner = outer.new Inner();
+    	inner.setName("inner name");
+    	outer.setInner(inner);
+    	
+    	OuterCanonico outerCanonico = new Mapping().apply(outer).to(OuterCanonico.class);
+    	
+    	assertEquals(outer.getName(), outerCanonico.getName());
+    	assertEquals(outer.getInner().getName(), outerCanonico.getInnerCanonico().getName());
+    }
+    
+    @Test
+    public void testInnerClassToExistingInstanceMapping() {
+    	Outer outer = new Outer();
+    	outer.setName("outer name");
+    	Inner inner = outer.new Inner();
+    	inner.setName("inner name");
+    	outer.setInner(inner);
+    	OuterCanonico outerCanonico = new OuterCanonico();
+    	OuterCanonico returningObject = new Mapping().apply(outer).to(outerCanonico);
+    	
+    	assertTrue(outerCanonico == returningObject);
+    	assertEquals(outer.getName(), outerCanonico.getName());
+    	assertEquals(outer.getInner().getName(), outerCanonico.getInnerCanonico().getName());
     }
 }
