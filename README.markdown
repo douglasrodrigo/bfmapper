@@ -11,7 +11,7 @@ Use it like a maven dependency on your project
  	  <dependency>
 	     <groupId>br.com.bfmapper</groupId>
 		 <artifactId>bfmapper</artifactId>
-		 <version>1.0-SNAPSHOT</version>
+		 <version>1.1.6</version>
 	   </dependency>
 
 Usage:
