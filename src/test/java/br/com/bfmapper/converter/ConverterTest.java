@@ -1,11 +1,16 @@
 package br.com.bfmapper.converter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.Assert;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.NoOp;
 
@@ -37,37 +42,36 @@ import br.com.bfmapper.model.PneuCanonico;
 import br.com.bfmapper.model.Produto;
 import br.com.bfmapper.model.ProdutoCanonico;
 import br.com.bfmapper.model.TipoAluno;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import br.com.bfmapper.model.canonic.ContratoCanonico;
+import br.com.bfmapper.model.vo.Contrato;
+import br.com.bfmapper.model.vo.Dependente;
 
 public class ConverterTest extends BaseTest {
     
 	@Test
-	public void testConverterSimple() {
-	    
+	public void simpleConverter() {
 		Carro carro = new Carro(1L, "Uno", "EP", new Pneu(1L, "Pirelli"));
 		CarroCanonico carroCanonico = new Mapping().apply(carro).to(CarroCanonico.class);
 		
-		Assert.assertNotNull("Objeto carro não poder ser null", carroCanonico);
-		Assert.assertNotNull("Propriedade marca não poder ser null", carroCanonico.getMarca());
-		Assert.assertNotNull("Propriedade modelo não poder ser null", carroCanonico.getModelo());
-		Assert.assertNotNull("Propriedade pneu não poder ser null", carroCanonico.getPneu());
+		assertNotNull("Objeto carro não poder ser null", carroCanonico);
+		assertNotNull("Propriedade marca não poder ser null", carroCanonico.getMarca());
+		assertNotNull("Propriedade modelo não poder ser null", carroCanonico.getModelo());
+		assertNotNull("Propriedade pneu não poder ser null", carroCanonico.getPneu());
 	}
 	
 	@Test
-	public void testConverterSimpleReverse() {
+	public void reverseSimpleConverter() {
 		CarroCanonico carroCanonico = new CarroCanonico("Uno", "EP", "Pirelli");
 		Carro carro = new Mapping().apply(carroCanonico).to(Carro.class);
 		
-		Assert.assertNotNull("Objeto carro não poder ser null", carro);
-		Assert.assertNotNull("Propriedade marca não poder ser null", carro.getNome());
-		Assert.assertNotNull("Propriedade modelo não poder ser null", carro.getTipo());
-		Assert.assertNotNull("Propriedade pneu não poder ser null", carro.getPneu());
+		assertNotNull("Objeto carro não poder ser null", carro);
+		assertNotNull("Propriedade marca não poder ser null", carro.getNome());
+		assertNotNull("Propriedade modelo não poder ser null", carro.getTipo());
+		assertNotNull("Propriedade pneu não poder ser null", carro.getPneu());
 	}
 
 	@Test
-	public void testConverterMultiApply() {
+	public void multiApplyConverter() {
 		PessoaCanonico pessoaCanonico = new PessoaCanonico(1L, "Douglas Rodrigo");
 		
 		List<EnderecoCanonico> enderecos = new ArrayList<EnderecoCanonico>();
@@ -78,14 +82,14 @@ public class ConverterTest extends BaseTest {
 		CarroCanonico carroCanonico = new CarroCanonico("Uno", "EP", "Pirelli");
 		Pessoa pessoa =	new Mapping().apply(pessoaCanonico).apply(carroCanonico).to(Pessoa.class);
 		
-		Assert.assertNotNull("Objeto pessoa não poder ser null", pessoa);
-		Assert.assertEquals("Objeto pessoa.endereco deve possuir 2 itens", pessoa.getEnderecos().size(), 2);
-		Assert.assertNotNull("Objeto pessoa.carro não pode ser null", pessoa.getCarro());
-		Assert.assertEquals("Objeto pessoa.carro.nome deve ser igual 'Uno'", pessoa.getCarro().getNome(), "Uno");
+		assertNotNull("Objeto pessoa não poder ser null", pessoa);
+		assertEquals("Objeto pessoa.endereco deve possuir 2 itens", pessoa.getEnderecos().size(), 2);
+		assertNotNull("Objeto pessoa.carro não pode ser null", pessoa.getCarro());
+		assertEquals("Objeto pessoa.carro.nome deve ser igual 'Uno'", pessoa.getCarro().getNome(), "Uno");
 	}
 
 	@Test
-	public void testConverterMultiApplyReverse() {
+	public void multiApplyReverse() {
 		Pessoa pessoa = new Pessoa(1L, "Douglas Rodrigo", new Carro(1l, "Fusca", new Pneu(1l, "Toyo")));
 		
 		List<Endereco> enderecos = new ArrayList<Endereco>();
@@ -96,46 +100,45 @@ public class ConverterTest extends BaseTest {
 		PessoaCanonico pessoaCanonico =	new Mapping().apply(pessoa).to(PessoaCanonico.class);
 		CarroCanonico carroCanonico = new Mapping().apply(pessoa.getCarro()).to(CarroCanonico.class);
 		
-		Assert.assertNotNull("Objeto pessoa não poder ser null", pessoaCanonico);
-		Assert.assertNotNull("Objeto pessoa não poder ser null", carroCanonico);		
+		assertNotNull("Objeto pessoa não poder ser null", pessoaCanonico);
+		assertNotNull("Objeto pessoa não poder ser null", carroCanonico);		
 	}
 	
 	@Test
-	public void testConverterApplyOnAttribute() {
+	public void applyOnAttribute() {
 		CarroCanonico carroCanonico = new CarroCanonico("Uno", "EP", "Pirelli");
 		Pessoa pessoa =	new Mapping().applyOn(carroCanonico, "carro").to(Pessoa.class);
 		
-		Assert.assertNotNull("Objeto pessoa não poder ser null", pessoa);
-		Assert.assertNotNull("Objeto pessoa.carro não poder ser null", pessoa.getCarro());
+		assertNotNull("Objeto pessoa não poder ser null", pessoa);
+		assertNotNull("Objeto pessoa.carro não poder ser null", pessoa.getCarro());
 	}
 
 	@Test
-	public void testConverterApplyOnRecursiveAttribute() {
+	public void applyOnRecursiveAttribute() {
 		PneuCanonico pneu = new PneuCanonico(4556L, "Pirelli");
 		Pessoa pessoa =	new Mapping().applyOn(pneu, "carro.pneu").to(Pessoa.class);
 		
-		Assert.assertNotNull("Objeto pessoa não poder ser null", pessoa);
-		Assert.assertNotNull("Atributo pessoa.carro.pneu não poder ser null", pessoa.getCarro().getPneu());
+		assertNotNull("Objeto pessoa não poder ser null", pessoa);
+		assertNotNull("Atributo pessoa.carro.pneu não poder ser null", pessoa.getCarro().getPneu());
 		
-		Assert.assertTrue(pneu.getCodigo() == pessoa.getCarro().getPneu().getId());
+		assertTrue(pneu.getCodigo() == pessoa.getCarro().getPneu().getId());
 	}
 	
 	@Test
-	public void testCircularReference() {
+	public void circularReference() {
 		ObjectCanonicRecursiveModel1 objectCanonicRecursiveModel1 = new ObjectCanonicRecursiveModel1();
 		ObjectCanonicRecursiveModel2 objectCanonicRecursiveModel2 = new ObjectCanonicRecursiveModel2();
 		objectCanonicRecursiveModel2.setObject1(objectCanonicRecursiveModel1);
 		objectCanonicRecursiveModel1.setObject2(objectCanonicRecursiveModel2);		
 		
-		
 		ObjectRecursiveModel1 objectRecursiveModel1 = new Mapping().apply(objectCanonicRecursiveModel1).to(ObjectRecursiveModel1.class);
 		
-		Assert.assertTrue("objectRecursiveModel1.object2.object1 should be same reference as objectRecursiveModel1", 
+		assertTrue("objectRecursiveModel1.object2.object1 should be same reference as objectRecursiveModel1", 
 				objectRecursiveModel1 == objectRecursiveModel1.getObject2().getObject1());
 	}
 	
 	@Test
-	public void testDeepCircularReference() {
+	public void deepCircularReference() {
 		ObjectCanonicRecursiveModel1 objectCanonicRecursiveModel1 = new ObjectCanonicRecursiveModel1();
 		ObjectCanonicRecursiveModel2 objectCanonicRecursiveModel2 = new ObjectCanonicRecursiveModel2();
 		ObjectCanonicRecursiveModel1 otherObject1 = new ObjectCanonicRecursiveModel1();
@@ -146,59 +149,59 @@ public class ConverterTest extends BaseTest {
 		
 		ObjectRecursiveModel1 objectRecursiveModel1 = new Mapping().apply(objectCanonicRecursiveModel1).to(ObjectRecursiveModel1.class);
 		
-		Assert.assertTrue("objectRecursiveModel1.object2.object1.object2 should be same reference as objectRecursiveModel1.object2", 
+		assertTrue("objectRecursiveModel1.object2.object1.object2 should be same reference as objectRecursiveModel1.object2", 
 				objectRecursiveModel1.getObject2().getObject1().getObject2() == objectRecursiveModel1.getObject2());
 	}
 	
 	@Test
-	public void testConverterTransformerValues() {
+	public void converterWithTransformerValues() {
 		Aluno aluno = new Aluno(1L, "Aline Alves", "20", "07111989", "REGULAR");
 		AlunoCanonico alunoCanonico = new Mapping().apply(aluno).to(AlunoCanonico.class);
 
-		Assert.assertNotNull("Objeto aluno não poder ser null", alunoCanonico);
-		Assert.assertNotNull("Propriedade id não poder ser null", alunoCanonico.getId());
-		Assert.assertNotNull("Propriedade nome não poder ser null", alunoCanonico.getNome());
-		Assert.assertNotNull("Propriedade idade não poder ser null", alunoCanonico.getIdade());		
-		Assert.assertNotNull("Propriedade dataAniversario não poder ser null", alunoCanonico.getDataAniversario());
-		Assert.assertNotNull("Propriedade tipoAluno não poder ser null", alunoCanonico.getTipoAluno());
-		Assert.assertEquals("Propriedade sexo deve receber o vsalor default 'F'", alunoCanonico.getSexo(), "F");
+		assertNotNull("Objeto aluno não poder ser null", alunoCanonico);
+		assertNotNull("Propriedade id não poder ser null", alunoCanonico.getId());
+		assertNotNull("Propriedade nome não poder ser null", alunoCanonico.getNome());
+		assertNotNull("Propriedade idade não poder ser null", alunoCanonico.getIdade());		
+		assertNotNull("Propriedade dataAniversario não poder ser null", alunoCanonico.getDataAniversario());
+		assertNotNull("Propriedade tipoAluno não poder ser null", alunoCanonico.getTipoAluno());
+		assertEquals("Propriedade sexo deve receber o vsalor default 'F'", alunoCanonico.getSexo(), "F");
 	}
 
 	@Test
-	public void testConverterListSimpleType() {
+	public void converterListSimpleType() {
 		Aluno aluno = new Aluno(1L, "Aline Alves", "20", "07111989", "REGULAR");
 		aluno.setNotas(Arrays.asList("0.1", "0.2", "10.0"));
 		
 		AlunoCanonico alunoCanonico = new Mapping().apply(aluno).to(AlunoCanonico.class);
 
-		Assert.assertNotNull("Propriedade notas não poder ser null", alunoCanonico.getNotas());
-		Assert.assertNotNull("Propriedade notas não poder ser vazia", !alunoCanonico.getNotas().isEmpty());
+		assertNotNull("Propriedade notas não poder ser null", alunoCanonico.getNotas());
+		assertNotNull("Propriedade notas não poder ser vazia", !alunoCanonico.getNotas().isEmpty());
 	}
 
 	@Test
-	public void testConverterListEnumType() {
+	public void converterListEnumType() {
 		ObjectModel model = new ObjectModel(Arrays.asList(TipoAluno.ESPECIAL, TipoAluno.REGULAR));
 		
 		ObjectCanonicModel canonicModel = new Mapping().apply(model).to(ObjectCanonicModel.class);
 
-		Assert.assertNotNull("Propriedade tipoAlunos não poder ser null", canonicModel.getTipoAlunos());
-		Assert.assertNotNull("Propriedade tipoAlunos não poder ser vazia", !canonicModel.getTipoAlunos().isEmpty());
+		assertNotNull("Propriedade tipoAlunos não poder ser null", canonicModel.getTipoAlunos());
+		assertNotNull("Propriedade tipoAlunos não poder ser vazia", !canonicModel.getTipoAlunos().isEmpty());
 	}
 	
 	@Test
-	public void testDeepClone() {
+	public void deepClone() {
 	    Pneu pneuOrigem = new Pneu(1L, "Pirelli");
 	    Carro carroOrigem = new Carro(1L, "Uno", "EP", pneuOrigem);
 	    
 	    Carro carro = new Mapping().apply(carroOrigem).to(Carro.class);
 	    
-	    Assert.assertNotNull("O pneu não pode ser null", carro.getPneu());
-	    Assert.assertFalse("Os carros não deveriam ter a mesma referencia", carro == carroOrigem);
-	    Assert.assertFalse("Os pneus não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
+	    assertNotNull("O pneu não pode ser null", carro.getPneu());
+	    assertFalse("Os carros não deveriam ter a mesma referencia", carro == carroOrigem);
+	    assertFalse("Os pneus não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
 	}
 	
 	@Test
-	public void testDeepCloneList() {
+	public void deepCloneList() {
 	    Pneu pneuOrigem = new Pneu(1L, "Pirelli");
         Carro carroOrigem = new Carro(1L, "Corsa", "Millenium", pneuOrigem);
         Pessoa dono1 = new Pessoa(1L, "fulano de tal", null);
@@ -206,63 +209,61 @@ public class ConverterTest extends BaseTest {
         carroOrigem.setDonos(Arrays.asList(dono1, dono2));
         Carro carro = new Mapping().apply(carroOrigem).to(Carro.class);
         
-        Assert.assertNotNull("O pneu não pode ser null", carro.getPneu());
-        Assert.assertFalse("Os carros não deveriam ter a mesma referencia", carro == carroOrigem);
-        Assert.assertFalse("Os pneus não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
-        Assert.assertFalse("As listas de donos não deveriam ter a mesma referencia", carro.getDonos() == carroOrigem.getDonos());
-        Assert.assertFalse("O dono1 não deveriam ter a mesma referencia", carro.getDonos().get(0) == carroOrigem.getDonos().get(0));
-        Assert.assertFalse("O dono2 não deveriam ter a mesma referencia", carro.getDonos().get(1) == carroOrigem.getDonos().get(1));
+        assertNotNull("O pneu não pode ser null", carro.getPneu());
+        assertFalse("Os carros não deveriam ter a mesma referencia", carro == carroOrigem);
+        assertFalse("Os pneus não deveriam ter a mesma referencia", carro.getPneu() == carroOrigem.getPneu());
+        assertFalse("As listas de donos não deveriam ter a mesma referencia", carro.getDonos() == carroOrigem.getDonos());
+        assertFalse("O dono1 não deveriam ter a mesma referencia", carro.getDonos().get(0) == carroOrigem.getDonos().get(0));
+        assertFalse("O dono2 não deveriam ter a mesma referencia", carro.getDonos().get(1) == carroOrigem.getDonos().get(1));
 	}
 
 	@Test
-	public void testWithAutomaticEqualsProperties() {
+	public void automaticEqualsProperties() {
 	    Date dataValidade = new Date();
 	    Produto produto = new Produto("marca A", new Float("3700.00"), "fabricante B");
 	    produto.setDataValidade(dataValidade);
 	    ProdutoCanonico produtoCanonico = new Mapping().apply(produto).to(ProdutoCanonico.class);
-	    Assert.assertNotNull("A marcao nao deveria ser null", produtoCanonico.getMarca());
-	    Assert.assertNotNull("O fabricante nao deveria ser null", produtoCanonico.getFabricante());
-	    Assert.assertNotNull("O preco nao deveria ser null", produtoCanonico.getPreco());
-	    Assert.assertEquals("A data de validade deveria igual", produtoCanonico.getDataValidade(), dataValidade);
+	    
+	    assertNotNull("A marcao nao deveria ser null", produtoCanonico.getMarca());
+	    assertNotNull("O fabricante nao deveria ser null", produtoCanonico.getFabricante());
+	    assertNotNull("O preco nao deveria ser null", produtoCanonico.getPreco());
+	    assertEquals("A data de validade deveria igual", produtoCanonico.getDataValidade(), dataValidade);
 	}
 	
     @Test
-    public void testWithExcludeEqualsProperties() {
+    public void excludeEqualsProperties() {
         Livro livro = new Livro("O programador pragmático", "BOOKMAN COMPANHIA ED", "Andrew Hunt");
         livro.setAnoPublicacao(2011L);
         
         LivroCanonico livroCanonico = new Mapping().apply(livro).to(LivroCanonico.class);
-        Assert.assertNotNull("O autor do livro nao deveria ser null", livroCanonico.getAutor());
-        Assert.assertNotNull("A editora do livro nao deveria ser null", livroCanonico.getEditora());
-        Assert.assertNotNull("O nome do livro nao deveria ser null", livroCanonico.getNome());
-        Assert.assertNull("A data de publicacao deveria ser null", livroCanonico.getAnoPublicacao());
         
+        assertNotNull("O autor do livro nao deveria ser null", livroCanonico.getAutor());
+        assertNotNull("A editora do livro nao deveria ser null", livroCanonico.getEditora());
+        assertNotNull("O nome do livro nao deveria ser null", livroCanonico.getNome());
+        assertNull("A data de publicacao deveria ser null", livroCanonico.getAnoPublicacao());
     }
     
     @Test
-    public void testWithProxiedClasses() {
+    public void concerterProxiedClasses() {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(Carro.class);
         enhancer.setCallback(NoOp.INSTANCE);
         Object proxiedCarroObject = enhancer.create();
         
-        
         ((Carro) proxiedCarroObject).setNome("Car one");
         
         CarroCanonico carroCanonico = new Mapping().apply(proxiedCarroObject).to(CarroCanonico.class);
-        
-        Assert.assertEquals("car and canonic car should have same name", ((Carro) proxiedCarroObject).getNome(), carroCanonico.getMarca());
-        
+        assertEquals("car and canonic car should have same name", ((Carro) proxiedCarroObject).getNome(), carroCanonico.getMarca());
     }
     
     @Test
-    public void testShouldNotAddMultipleConvertersForTheSamePairOfClasses() {
+    public void shouldNotAddMultipleConvertersForTheSamePairOfClasses() {
         MappingRules.addRule(new Converter(ObjectCanonicModel.class, ObjectModel.class));
         MappingRules.addRule(new Converter(ObjectCanonicModel.class, ObjectModel.class));
     }
     
     @Test
-    public void testInnerClassMapping() {
+    public void innerClassMapping() {
     	Outer outer = new Outer();
     	outer.setName("outer name");
     	Inner inner = outer.new Inner();
@@ -276,7 +277,7 @@ public class ConverterTest extends BaseTest {
     }
     
     @Test
-    public void testInnerClassToExistingInstanceMapping() {
+    public void innerClassToExistingInstanceMapping() {
     	Outer outer = new Outer();
     	outer.setName("outer name");
     	Inner inner = outer.new Inner();
@@ -288,5 +289,20 @@ public class ConverterTest extends BaseTest {
     	assertTrue(outerCanonico == returningObject);
     	assertEquals(outer.getName(), outerCanonico.getName());
     	assertEquals(outer.getInner().getName(), outerCanonico.getInnerCanonico().getName());
+    }
+    
+    @Test
+    public void innerClassWithList() {
+    	Contrato contrato = new Contrato();
+    	contrato.setCodigo("666");
+    	contrato.adicionar(new Dependente("Tia")).adicionar(new Dependente("Andressa"));
+    	
+    	ContratoCanonico contratoCanonico = new Mapping().apply(contrato).to(ContratoCanonico.class);
+    	assertNotNull(contratoCanonico);
+    	assertFalse(contratoCanonico.getDependentes().isEmpty());
+
+    	for (br.com.bfmapper.model.canonic.ContratoCanonico.Dependente dependente : contratoCanonico.getDependentes()) {
+    		assertNotNull(dependente);
+		}
     }
 }

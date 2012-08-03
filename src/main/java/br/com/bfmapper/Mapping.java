@@ -293,7 +293,7 @@ public class Mapping implements Serializable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
     private void setCollectionValueFromReadMethod(PropertyDescriptor targetPropertyDescriptor, Object target, Object value) {
 	    /* generated beans by webservices don't have set for collections */
 	    try {
@@ -308,7 +308,6 @@ public class Mapping implements Serializable {
 	}
 	
 	private Object resolveValue(Object source, Object target, String sourceProperty, String targetProperty, Object value, Transformer transformer) {
-		
         Class<?> sourceClassAttribute = ReflectionUtils.invokeRecursiveType(source, sourceProperty);
 	    Class<?> targetClassAttribute = ReflectionUtils.invokeRecursiveType(target, targetProperty);
 		
@@ -357,7 +356,6 @@ public class Mapping implements Serializable {
 	}
 
 	private Object resolveSimpleValue(Object source, Object target, Class<?> targetClassAttribute, Object value, Transformer transformer) {
-
 		if (transformer != null) {
 			/* use custom transformer user */
 			if (transformer instanceof SimpleTransformer) {
@@ -396,9 +394,16 @@ public class Mapping implements Serializable {
 				
 				if (converter != null) {
 					for (Object sourceItem : (Collection<Object>) sourceValue) {
-						targetCollection.add(this.applyConverter(converter, sourceItem, ReflectionUtils.newInstance(targetCollectionItemClass)));
+						Object targetInstance = null;
+						
+	            	    if (ReflectionUtils.isInnerClass(targetCollectionItemClass)) {
+	            	    	targetInstance = ReflectionUtils.newInnerClassInstance(targetCollectionItemClass, target);
+	            	    } else {
+	            	    	targetInstance = ReflectionUtils.newInstance(targetCollectionItemClass);
+	            	    }
+						
+						targetCollection.add(this.applyConverter(converter, sourceItem, targetInstance));
 					}
-					
 				} else if (ReflectionUtils.isSimpleType(targetCollectionItemClass)) {
 					for (Object sourceItem : (Collection<Object>) sourceValue) {
 						targetCollection.add(this.resolveSimpleValue(source, target, targetCollectionItemClass, sourceItem, transformer));
@@ -410,12 +415,10 @@ public class Mapping implements Serializable {
                         
                         this.evalEqualsProperties(sourceItem, returnValue, null);
                         targetCollection.add(returnValue);
-                        
                     }
                     value = targetCollection;
 				    
 					// TODO - implementar conversao de List dentro de List (recursivo)
-//					value = null;
 				}
 			} catch (Exception e) {
 				throw new IllegalArgumentException(e);
