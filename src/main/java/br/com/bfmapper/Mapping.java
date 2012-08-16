@@ -53,16 +53,7 @@ public class Mapping implements Serializable {
 			this.addToCache(appliedObjectSource, target);
 			
 			if (appliedObject.getAppliedType().equals(AppliedType.APPLY)) {
-				if (appliedObjectSource.getClass().equals(target.getClass())) {
-					this.evalEqualsProperties(appliedObjectSource, target, null);										
-				} else {
-					Converter converter = this.getConverter(appliedObjectSource.getClass(), target.getClass());
-					if (converter != null) {
-						this.applyConverter(converter, appliedObjectSource, target);
-					} else { 
-						this.applyConverterOnField(appliedObjectSource, target);
-					}
-				}				
+				to( target, appliedObjectSource );				
 			}	
 
 			if (appliedObject.getAppliedType().equals(AppliedType.APPLY_ON)) {
@@ -72,6 +63,20 @@ public class Mapping implements Serializable {
 		this.mappingContext.clear();
 		return target;
 	}
+
+    private <T> void to( T target, Object appliedObjectSource )
+    {
+        if (appliedObjectSource.getClass().equals(target.getClass())) {
+        	this.evalEqualsProperties(appliedObjectSource, target, null);										
+        } else {
+        	Converter converter = this.getConverter(appliedObjectSource.getClass(), target.getClass());
+        	if (converter != null) {
+        		this.applyConverter(converter, appliedObjectSource, target);
+        	} else { 
+        		this.applyConverterOnField(appliedObjectSource, target);
+        	}
+        }
+    }
 
 	private void addToCache(Object source, Object target) {
 		this.mappingContext.getCachedObjects().put(source, target);
@@ -102,16 +107,41 @@ public class Mapping implements Serializable {
 	    return (T) this.apply(value).to(value.getClass());
 	}
 	
-	public <T> T toCollection(Class<?> target, Class<? extends Collection<?>> collectionClass) {
-	    return null;
+	public <T,E extends Collection<T>> Collection<T> toCollection(Class<T> target, Class<E> targetCollection) {
+	    E col  = instanceFactory( targetCollection );
+	    
+	    return toCollection( target, col );
+	}
+
+	public <T,E extends Collection<T>> E toCollection( Class<T> target, E col )
+    {
+        for ( AppliedObject appliedObj : this.mappingContext.getAppliedObjects() )
+        {
+	        Object src = appliedObj.getSourceObject();
+            if(src instanceof Collection) {
+	            Collection<?> srcCol = (Collection<?>) src;
+	            for ( Object object : srcCol )
+                {
+	                T targetObject = instanceFactory( target );
+	                to(targetObject , object );
+	                col.add(targetObject); 
+                }
+	        }else {
+	            col.add( to( target ) );
+	        }
+        }
+        
+        this.mappingContext.clear();
+	    
+	    return col;
+    }
+	
+    public <T> Collection<T> toCollection(Class<T> target) {
+	    return toCollection( target, ArrayList.class );
 	}
 	
-    public <T> T toCollection(Class<?> target) {
-	    return null;
-	}
-	
-	private Object instanceFactory(Class<?> target) {
-		Object object = null;
+	private <E> E  instanceFactory(Class<E> target) {
+		E object = null;
 		try {
 			object = ReflectionUtils.newInstance(target);
 		} catch (Exception e) {
