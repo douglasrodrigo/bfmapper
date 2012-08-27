@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -101,7 +102,20 @@ public class ConverterTest extends BaseTest {
 		CarroCanonico carroCanonico = new Mapping().apply(pessoa.getCarro()).to(CarroCanonico.class);
 		
 		assertNotNull("Objeto pessoa não poder ser null", pessoaCanonico);
-		assertNotNull("Objeto pessoa não poder ser null", carroCanonico);		
+		assertNotNull("Objeto pessoa não poder ser null", carroCanonico);
+		assertNotNull(pessoaCanonico.getEnderecos());
+		assertEquals(pessoaCanonico.getEnderecos().size(), 2);
+	}
+	
+	@Test
+	public void list() {
+	    List<Endereco> enderecos = new ArrayList<Endereco>();
+	    enderecos.add(new Endereco("Av Paulista", "344", "Paulista"));
+	    enderecos.add(new Endereco("Alameda Santos", "899", "Paulista"));
+	    
+	    Collection<EnderecoCanonico> enderecosCanonico = new Mapping().apply(enderecos).toCollection(EnderecoCanonico.class);
+	    assertNotNull(enderecosCanonico);
+	    assertEquals(enderecosCanonico.size(), 2);
 	}
 	
 	@Test
