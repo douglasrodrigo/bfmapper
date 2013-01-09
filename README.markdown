@@ -4,6 +4,8 @@ bfmapper: Java Bean Converter
 Installing:
 =========================================
 
+Clone bfmapper project and install in your local repository
+
 mvn clean install
 
 Use it like a maven dependency on your project
